@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://api.cerbos.dev/latest/cerbos/policy/v1/Policy.schema.json
+
+apiVersion: api.cerbos.dev/v1
+resourcePolicy:
+  version: default
+
+  # This resource file is reviewed for when checking permissions when a resource
+  # is of `kind` "basicResource"
+  resource: testResource
+
+  rules:
+    - actions:
+        - update
+      effect: EFFECT_ALLOW
+      roles:
+        - USER
+      condition:
+        match:
+          expr: request.resource.attr.ownerId == request.principal.id
+
+  schemas:
+    principalSchema:
+      ref: cerbos:///principal.json
+    resourceSchema:
+      ref: cerbos:///basicResource.json
+      ignoreWhen:
+        actions:
+          - create
